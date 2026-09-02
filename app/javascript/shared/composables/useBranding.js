@@ -14,8 +14,10 @@ export function useBranding() {
   const replaceInstallationName = text => {
     if (!text) return text;
 
-    const installationName = globalConfig.value?.installationName;
-    if (!installationName) return text;
+    const raw = String(globalConfig.value?.installationName || '').trim();
+    // Prod DB may still store the upstream vendor name — never surface it.
+    const installationName =
+      !raw || /^chatwoot$/i.test(raw) ? 'Inbox Studio' : raw;
 
     return text.replace(/Chatwoot/g, installationName);
   };

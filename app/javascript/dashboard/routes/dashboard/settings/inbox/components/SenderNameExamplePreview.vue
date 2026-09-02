@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Avatar from 'next/avatar/Avatar.vue';
 import RadioCard from 'dashboard/components-next/radioCard/RadioCard.vue';
+import { useMapGetter } from 'dashboard/composables/store.js';
 
 const props = defineProps({
   senderNameType: {
@@ -22,6 +23,13 @@ const props = defineProps({
 const emit = defineEmits(['update']);
 
 const { t } = useI18n();
+const globalConfig = useMapGetter('globalConfig/get');
+/** Never show the upstream vendor name in sender previews. */
+const previewBusinessName = computed(() => {
+  const name = String(globalConfig.value?.installationName || '').trim();
+  if (!name || /^chatwoot$/i.test(name)) return 'Inbox Studio';
+  return name;
+});
 
 const senderNameKeyOptions = computed(() => [
   {
@@ -30,7 +38,7 @@ const senderNameKeyOptions = computed(() => [
     content: t('INBOX_MGMT.EDIT.SENDER_NAME_SECTION.FRIENDLY.SUBTITLE'),
     preview: {
       senderName: 'Smith',
-      businessName: 'Chatwoot',
+      businessName: previewBusinessName.value,
       email: '<support@yourbusiness.com>',
     },
   },
@@ -40,7 +48,7 @@ const senderNameKeyOptions = computed(() => [
     content: t('INBOX_MGMT.EDIT.SENDER_NAME_SECTION.PROFESSIONAL.SUBTITLE'),
     preview: {
       senderName: '',
-      businessName: 'Chatwoot',
+      businessName: previewBusinessName.value,
       email: '<support@yourbusiness.com>',
     },
   },
