@@ -5,6 +5,10 @@
   "type": "module",
   "description": "MCP server for Chatwoot omnichannel inbox (Intelli-Verse engagement stack).",
   "main": "server.js",
-  "scripts": { "start": "node server.js" },
-  "engines": { "node": ">=18" }
+  "scripts": {
+    "start": "node init && node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
 }
